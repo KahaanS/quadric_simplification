@@ -1,6 +1,12 @@
 from mesh.mesh import Mesh
+import os
+import argparse
+from tqdm import tqdm
+
 
 if __name__ == "__main__":
+    
+    
     mesh = Mesh("samples/armchair.obj")
     print(f"Loaded mesh with {mesh.vertex_count} vertices, {mesh.face_count} faces and {mesh.edge_count} edges.")
     simplification_factor = 0.1

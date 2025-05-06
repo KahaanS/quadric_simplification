@@ -164,22 +164,38 @@ class Mesh:
         print("Mesh simplification completed.")
         
     def finalize_mesh(self):
-        # Keep only valid vertices
-        old_vertices = [v for v in self.vertices if v.mask]
-        index_map = {v.index: i for i, v in enumerate(old_vertices)}
+        # # Keep only valid vertices
         
-        for i, v in enumerate(old_vertices):
-            v.index = i
-        self.vertices = old_vertices
+        new_vertices = []
+        idx_ctr = 0
+        for v in self.vertices:
+            if v.mask:
+                new_vertices.append(v)
+                v.index = idx_ctr
+                idx_ctr += 1
+                
+        self.vertices = new_vertices
 
         # Keep only valid faces and update indices
-        old_faces = [f for f in self.faces if f.mask]
-        for i, f in enumerate(old_faces):
-            f.index = i
-        self.faces = old_faces
+        
+        new_faces = []
+        idx_ctr = 0
+        
+        for f in self.faces:
+            if f.mask:
+                new_faces.append(f)
+                f.index = idx_ctr
+                idx_ctr += 1
+        
+        self.faces = new_faces
+        
+        # old_faces = [f for f in self.faces if f.mask]
+        # for i, f in enumerate(old_faces):
+        #     f.index = i
+        # self.faces = old_faces
 
         # Keep only valid edges
-        self.edges = [e for e in self.edges if e.mask]
+        self.edges = [e for e in self.edges if e.mask and e.vertices[0].mask and e.vertices[1].mask]
 
         # Update counts
         self.vertex_count = len(self.vertices)
