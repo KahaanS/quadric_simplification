@@ -43,3 +43,9 @@ class Edge:
 
     def __repr__(self):
         return f"Edge(vertex1={self.vertices[0].index}, vertex2={self.vertices[1].index}, faces={[f.index for f in self.faces]}, error={self.error})"
+    
+    def __lt__(self, other):
+        # Break ties using sorted vertex indices
+        self_ids = sorted((self.vertices[0].index, self.vertices[1].index))
+        other_ids = sorted((other.vertices[0].index, other.vertices[1].index))
+        return self_ids < other_ids
