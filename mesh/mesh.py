@@ -21,7 +21,7 @@ class Mesh:
         self.edge_lookup = dict()    # Still used for deduplication
 
         print(f"Loading mesh from {self.file_path}...")
-        for line in tqdm(lines):
+        for line in lines:
             split_line = line.split()
 
             if len(split_line) == 0:
@@ -66,13 +66,18 @@ class Mesh:
         self.face_count = len(self.faces)
         self.edge_count = len(self.edges)
         
+        print(f"Mesh loaded with Vertices: {self.vertex_count}, Faces: {self.face_count}, Edges: {self.edge_count}")
+        
     def simplify(self, target_vertex_count: int):
-        print("Computing initial quadrics for vertices...")
-        for vertex in tqdm(self.vertices):
+        print('Simplifying mesh...')
+        
+        print("Computing initial errors for vertices...")
+        for vertex in self.vertices:
             vertex.compute_quadric()
          
         self.active_vertex_count = sum(1 for v in self.vertices if v.mask)
         
+        print("Computing initial errors for edges...")
         # Priority queue of edges sorted by error
         edge_heap = []
         for edge in self.edges:
@@ -202,8 +207,7 @@ class Mesh:
         self.face_count = len(self.faces)
         self.edge_count = len(self.edges)
 
-        print("Mesh finalized.")
-        print(f"Vertices: {self.vertex_count}, Faces: {self.face_count}, Edges: {self.edge_count}")
+        print(f"Mesh finalized with Vertices: {self.vertex_count}, Faces: {self.face_count}, Edges: {self.edge_count}")
 
     def export_obj(self, output_path: str):
         with open(output_path, 'w') as f:

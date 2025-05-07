@@ -3,16 +3,30 @@ import os
 import argparse
 from tqdm import tqdm
 
+def get_args():
+    parser = argparse.ArgumentParser(description='Quadric Simplification')
+    parser.add_argument('-i', '--input', type=str, required=True, help='Input file')
+    parser.add_argument('-o', '--output', type=str, required=True, default='output', help='Output folder path')
+    parser.add_argument('-r', '--ratio', type=float, default=0.5, help='Simplification factor (ignored by -t)')
+    parser.add_argument('-t', '--target', type=int, help='Target vertex count')
+    
+    args = parser.parse_args()
+    return args
 
 if __name__ == "__main__":
     
+    args = get_args()
+    filename = args.input.split('/')[-1].split('.')[0]
+    mesh = Mesh(args.input)
     
-    mesh = Mesh("samples/armchair.obj")
-    print(f"Loaded mesh with {mesh.vertex_count} vertices, {mesh.face_count} faces and {mesh.edge_count} edges.")
-    simplification_factor = 0.1
-    target_vertex_count = int(mesh.vertex_count * simplification_factor)
+    if args.target:
+        target_vertex_count = args.target
+    else:
+        target_vertex_count = int(mesh.vertex_count * args.ratio)
+
     print(f"Target vertex count: {target_vertex_count}")
     mesh.simplify(target_vertex_count)
-    mesh.export_obj("output/armchair_simplified.obj")
     
-    # print(f"Vertices: {mesh.vertices[0].faces}")
+    output_path = os.path.join(args.output, filename+'_simplified.obj')
+    
+    mesh.export_obj(output_path)
