@@ -1,5 +1,4 @@
 import numpy as np
-from tqdm import tqdm
 from typing import List, TYPE_CHECKING
 
 if TYPE_CHECKING:

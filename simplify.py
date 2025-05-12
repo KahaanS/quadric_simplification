@@ -1,7 +1,6 @@
 from mesh.mesh import Mesh
 import os
 import argparse
-from tqdm import tqdm
 
 def get_args():
     parser = argparse.ArgumentParser(description='Quadric Simplification')
